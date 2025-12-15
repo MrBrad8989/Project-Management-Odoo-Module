@@ -4,7 +4,8 @@
     <record id="view_project_proyecto_form" model="ir.ui.view">
         <field name="name">project.proyecto.form</field>
         <field name="model">project.proyecto</field>
-        <field name="priority">1</field> <field name="arch" type="xml">
+        <field name="priority">1</field> 
+        <field name="arch" type="xml">
             <form>
                 <header>
                     <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
@@ -22,7 +23,7 @@
                         <group>
                             <field name="start_date"/>
                             <field name="end_date"/>
-                            <field name="progress" widget="progressbar"/>
+                            <field name="progress" widget="percentpie" options="{'size': 'medium'}"/> 
                         </group>
                     </group>
 
