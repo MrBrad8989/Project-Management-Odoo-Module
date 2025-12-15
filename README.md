@@ -14,6 +14,31 @@ El sistema se organiza en tres niveles jerárquicos para un control granular:
 
 ---
 
+## 🗂️ Estructura del Proyecto (Técnica)
+
+El código fuente está organizado siguiendo la arquitectura estándar de módulos de Odoo:
+
+### `models/` (Lógica de Negocio y Datos)
+Contiene las clases Python que definen la estructura de la base de datos y las reglas del sistema.
+* **`proyecto.py`**: Define el modelo principal del proyecto, sus estados y el cálculo global de avance.
+* **`trabajo.py`**: Gestiona las fases intermedias (trabajos), la priorización y las restricciones de edición.
+* **`actividad.py`**: Controla las tareas individuales, asignaciones a usuarios y fechas de planificación.
+
+### `views/` (Interfaz de Usuario)
+Archivos XML que definen cómo ve el usuario la información (formularios, listas, calendarios).
+* **`proyecto_views.xml`**: Define los formularios y listas para gestionar Proyectos.
+* **`trabajo_views.xml`**: Interfaz para gestionar los Trabajos.
+* **`actividad_views.xml`**: Incluye la vista de formulario, lista y la vista de **Calendario** para las actividades.
+* **`menu.xml`**: Estructura el menú de navegación en Odoo ("Gestión Proyectos" -> "Operaciones").
+
+### `security/` (Permisos)
+* **`ir.model.access.csv`**: Define las reglas de acceso (ACLs), otorgando permisos de lectura, escritura, creación y borrado a los grupos de usuarios (por defecto `base.group_user`).
+
+### `__manifest__.py`
+* Es el archivo de configuración principal que declara el nombre del módulo, versiones, dependencias (`base`) y los archivos de datos a cargar.
+
+---
+
 ## 🚀 Funcionalidades Principales
 
 ### 1. Gestión de Proyectos
@@ -63,14 +88,8 @@ El sistema incorpora "candados" lógicos para asegurar el flujo correcto de trab
 
 ---
 
-## 💻 Aspectos Técnicos
+## 💻 Aspectos Técnicos Generales
 
 * **Nombre Técnico**: `project_management`
 * **Dependencias**: `base`
 * **Menú Principal**: Gestión Proyectos
-    * *Submenús:* Operaciones -> Proyectos / Trabajos / Actividades
-* **Vistas Incluidas**:
-    * Listas (Tree)
-    * Formularios (Form)
-    * Calendario (para Actividades)
-    * Búsqueda y Filtros avanzados
