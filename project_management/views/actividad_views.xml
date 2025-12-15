@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_project_actividad_list" model="ir.ui.view">
+            <field name="name">project.actividad.list</field>
+            <field name="model">project.actividad</field>
+            <field name="arch" type="xml">
+                <list string="Actividades">
+                    <field name="name"/>
+                    <field name="trabajo_id"/>
+                    <field name="user_id"/>
+                    <field name="date_planned_end"/>
+                    <field name="state"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_project_actividad_form" model="ir.ui.view">
+            <field name="name">project.actividad.form</field>
+            <field name="model">project.actividad</field>
+            <field name="arch" type="xml">
+                <form string="Actividad">
+                    <header>
+                        <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="trabajo_id"/>
+                            </group>
+                            <group>
+                                <field name="user_id"/>
+                                <field name="date_planned_end"/>
+                                <field name="progress"/>
+                            </group>
+                        </group>
+                        <field name="detail" placeholder="Detalles de la tarea..."/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_project_actividad_calendar" model="ir.ui.view">
+            <field name="name">project.actividad.calendar</field>
+            <field name="model">project.actividad</field>
+            <field name="arch" type="xml">
+                <calendar string="Actividades"
+                          date_start="date_planned_end"
+                          color="user_id"
+                          mode="month"
+                          quick_create="0">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <field name="state"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="action_project_actividad" model="ir.actions.act_window">
+            <field name="name">Actividades</field>
+            <field name="res_model">project.actividad</field>
+            <field name="view_mode">list,form,calendar</field>
+        </record>
+
+        <menuitem id="menu_project_actividad"
+                  name="Actividades"
+                  parent="menu_project_management_root"
+                  action="action_project_actividad"
+                  sequence="1"/>
+
+    </data>
+</odoo>

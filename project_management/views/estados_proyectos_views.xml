@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem id="menu_project_management_root"
+                  name="Gestión de Proyectos"
+                  sequence="10"/>
+
+        <record id="view_project_proyecto_list" model="ir.ui.view">
+            <field name="name">project.proyecto.list</field>
+            <field name="model">project.proyecto</field>
+            <field name="arch" type="xml">
+                <list string="Proyectos">
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_project_proyecto_form" model="ir.ui.view">
+            <field name="name">project.proyecto.form</field>
+            <field name="model">project.proyecto</field>
+            <field name="arch" type="xml">
+                <form string="Proyecto">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_project_proyecto" model="ir.actions.act_window">
+            <field name="name">Proyectos</field>
+            <field name="res_model">project.proyecto</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <menuitem id="menu_project_proyecto"
+                  name="Proyectos"
+                  parent="menu_project_management_root"
+                  action="action_project_proyecto"
+                  sequence="2"/>
+
+    </data>
+</odoo>

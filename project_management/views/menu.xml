@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_project_management_root"
+              name="Gestión Proyectos"
+              web_icon="project_management,static/description/icon.png"/>
+
+    <menuitem id="menu_project_management_main"
+              name="Operaciones"
+              parent="menu_project_management_root"
+              sequence="10"/>
+
+    <menuitem id="menu_proyecto"
+          name="Proyectos"
+          parent="menu_project_management_main"
+          action="action_project_proyecto"
+          sequence="10"/>
+</odoo>
