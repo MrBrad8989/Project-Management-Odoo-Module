@@ -1,74 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
 
-        <record id="view_project_actividad_list" model="ir.ui.view">
-            <field name="name">project.actividad.list</field>
-            <field name="model">project.actividad</field>
-            <field name="arch" type="xml">
-                <list string="Actividades">
-                    <field name="name"/>
-                    <field name="trabajo_id"/>
-                    <field name="user_id"/>
-                    <field name="date_planned_end"/>
-                    <field name="state"/>
-                </list>
-            </field>
-        </record>
+    <record id="view_project_proyecto_form" model="ir.ui.view">
+        <field name="name">project.proyecto.form</field>
+        <field name="model">project.proyecto</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <field name="is_overdue" invisible="1"/>
 
-        <record id="view_project_actividad_form" model="ir.ui.view">
-            <field name="name">project.actividad.form</field>
-            <field name="model">project.actividad</field>
-            <field name="arch" type="xml">
-                <form string="Actividad">
-                    <header>
-                        <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
-                    </header>
-                    <sheet>
+                    <widget name="web_ribbon" title="Fuera de Plazo" bg_color="bg-danger" invisible="not is_overdue"/>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nombre del Proyecto"/>
+                        </h1>
+                    </div>
+                    <group>
                         <group>
-                            <group>
-                                <field name="name"/>
-                                <field name="trabajo_id"/>
-                            </group>
-                            <group>
-                                <field name="user_id"/>
-                                <field name="date_planned_end"/>
-                                <field name="progress"/>
-                            </group>
+                            <field name="responsible_id"/>
                         </group>
-                        <field name="detail" placeholder="Detalles de la tarea..."/>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="progress" widget="percentpie" options="{'size': 'medium'}"/>
+                        </group>
+                    </group>
 
-        <record id="view_project_actividad_calendar" model="ir.ui.view">
-            <field name="name">project.actividad.calendar</field>
-            <field name="model">project.actividad</field>
-            <field name="arch" type="xml">
-                <calendar string="Actividades"
-                          date_start="date_planned_end"
-                          color="user_id"
-                          mode="month"
-                          quick_create="0">
-                    <field name="name"/>
-                    <field name="user_id"/>
-                    <field name="state"/>
-                </calendar>
-            </field>
-        </record>
+                    <notebook>
+                        <page string="Descripción">
+                            <field name="description"/>
+                        </page>
 
-        <record id="action_project_actividad" model="ir.actions.act_window">
-            <field name="name">Actividades</field>
-            <field name="res_model">project.actividad</field>
-            <field name="view_mode">list,form,calendar</field>
-        </record>
+                        <page string="Trabajos y Actividades">
+                            <field name="trabajo_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="responsible_id"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'finalizado'"
+                                           decoration-info="state == 'progreso'"/>
+                                    <field name="progress" widget="progressbar"/>
+                                </list>
+                                <form>
+                                    <sheet>
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="state"/>
+                                            <field name="responsible_id"/>
+                                        </group>
+                                        <notebook>
+                                            <page string="Actividades del Trabajo">
+                                                <field name="actividad_ids" readonly="1">
+                                                    <list>
+                                                        <field name="name"/>
+                                                        <field name="user_id"/>
+                                                        <field name="state"/>
+                                                        <field name="progress" widget="progressbar"/>
+                                                    </list>
+                                                </field>
+                                            </page>
+                                        </notebook>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-        <menuitem id="menu_project_actividad"
-                  name="Actividades"
-                  parent="menu_project_management_root"
-                  action="action_project_actividad"
-                  sequence="1"/>
+    <record id="view_project_proyecto_list" model="ir.ui.view">
+        <field name="name">project.proyecto.list</field>
+        <field name="model">project.proyecto</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state == 'planificacion'" decoration-muted="state == 'cancelado'">
+                <field name="name"/>
+                <field name="responsible_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="progress" widget="progressbar"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'finalizado'"
+                       decoration-info="state == 'ejecucion'"/>
+            </list>
+        </field>
+    </record>
 
-    </data>
+    <record id="view_project_proyecto_search" model="ir.ui.view">
+        <field name="name">project.proyecto.search</field>
+        <field name="model">project.proyecto</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Proyectos">
+                <field name="name"/>
+                <field name="responsible_id"/>
+                <field name="state"/>
+
+                <filter string="Mis Proyectos" name="my_projects" domain="[('responsible_id', '=', uid)]"/>
+                <filter string="En Ejecución" name="in_progress" domain="[('state', '=', 'ejecucion')]"/>
+                <separator/>
+                <filter string="Finalizados" name="done" domain="[('state', '=', 'finalizado')]"/>
+
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Responsable" name="group_responsible" context="{'group_by': 'responsible_id'}"/>
+                    <filter string="Estado" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_project_proyecto" model="ir.actions.act_window">
+        <field name="name">Proyectos</field>
+        <field name="res_model">project.proyecto</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
 </odoo>
